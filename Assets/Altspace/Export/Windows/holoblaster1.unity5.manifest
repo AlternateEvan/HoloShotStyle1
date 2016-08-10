@@ -1,0 +1,48 @@
+ManifestFileVersion: 0
+CRC: 2348842757
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: d6da0124390ce546db7e3496d6169f3e
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: 9c2d932730ae072f437d38ff84bc052d
+HashAppended: 0
+ClassTypes:
+- Class: 1
+  Script: {instanceID: 0}
+- Class: 4
+  Script: {instanceID: 0}
+- Class: 21
+  Script: {instanceID: 0}
+- Class: 23
+  Script: {instanceID: 0}
+- Class: 28
+  Script: {instanceID: 0}
+- Class: 33
+  Script: {instanceID: 0}
+- Class: 43
+  Script: {instanceID: 0}
+- Class: 48
+  Script: {instanceID: 0}
+- Class: 64
+  Script: {instanceID: 0}
+- Class: 104
+  Script: {instanceID: 0}
+- Class: 108
+  Script: {instanceID: 0}
+- Class: 114
+  Script: {fileID: 11500000, guid: 61d1bafbba8e1324197995a3258b8d09, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 3536af6dd6ad4ef45bcc0cb2f399b12c, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 50ed239e0a26e654b8541e2ce3a9c748, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 5175d95c57bd1d5469e5212bdeccbe6a, type: 3}
+- Class: 115
+  Script: {instanceID: 0}
+- Class: 157
+  Script: {instanceID: 0}
+Assets:
+- Assets/Altspace/Export/Holoblaster1.unity
+Dependencies: []

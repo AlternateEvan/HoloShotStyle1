@@ -1,0 +1,96 @@
+# Unity generated
+# (note that Library can be a junction!)
+
+[Bb]uild/
+[Oo]bj/
+[Tt]emp/
+[Ll]ibrary
+UnityGenerated/
+sysinfo.txt
+
+Projectsettings/QualitySettings.asset
+
+# Visual Studio/MonoDevelop/XCode generated
+
+*.booproj
+/*.csproj
+*.DotSettings
+*.opensdf
+*.pdb
+*.pdb.meta
+*.pidb
+*.sdf
+/*.sln
+*.suo
+*.svd
+*.unityproj
+*.user
+*.userprefs
+Assets/UnityVS*
+DerivedData/
+ExportedObj/
+Debug/
+ipch/
+Release/
+.vs
+UpgradeLog.htm
+
+.sass-cache/
+
+# OS generated
+
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+Thumbs.db.meta
+
+# Icon must end with two \r
+.Icon?
+
+# Coherent generated
+
+Assets/CoherentUI/DebuggerWindows.meta
+
+# External tools
+
+Assets/SpaceNavigator/
+Assets/SpaceNavigator.meta
+
+min/
+min.meta
+
+# Ion, nested clone
+/ion
+/ion-win
+/ion-mac
+
+# Dev tools
+
+prepros
+prepros.meta
+prepros.cfg
+prepros.cfg.meta
+
+tags
+
+Assets/StreamingAssets/LocalWebAssets*
+AltspaceVR.apk
+
+LibraryCache/*
+!/LibraryCache/initialize.ps1
+!/LibraryCache/FastPlatformSetUpWindows.bat
+
+*.VC.db
+*.VC.opendb
+*.VC.VC.opendb
+concrt140.dll
+msvcp140.dll
+ucrtbased.dll
+vccorlib140.dll
+vcruntime140.dll
+Assets/Plugins/x86/libopenvr_api.so.meta
+Assets/Plugins/x86/libopenvr_api.so

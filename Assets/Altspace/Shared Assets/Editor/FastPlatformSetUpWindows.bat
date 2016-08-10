@@ -1,0 +1,1 @@
+PowerShell.exe -ExecutionPolicy Bypass -Command ".\initialize.ps1 -Platform StandaloneWindows"
