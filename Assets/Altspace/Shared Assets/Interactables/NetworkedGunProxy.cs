@@ -2,11 +2,11 @@
 
 public class NetworkedGunProxy : Proxy
 {
-	public GameObject BulletPrefab;
+	public GameObject[] BulletPrefabs;
 
 	public Transform FirePoint;
 
-	public int MaxBulletsPerSecond = 3;
+	public float FireRate = 333;
 
 	public float HapticDuration = 0.5f;
 

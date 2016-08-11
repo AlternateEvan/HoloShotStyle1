@@ -1,0 +1,72 @@
+ManifestFileVersion: 0
+CRC: 336843673
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: 569c99afbe6420598a59ff4887e7f917
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: 548058d950a191812776f8a17ee934e5
+HashAppended: 0
+ClassTypes:
+- Class: 1
+  Script: {instanceID: 0}
+- Class: 4
+  Script: {instanceID: 0}
+- Class: 21
+  Script: {instanceID: 0}
+- Class: 23
+  Script: {instanceID: 0}
+- Class: 28
+  Script: {instanceID: 0}
+- Class: 33
+  Script: {instanceID: 0}
+- Class: 43
+  Script: {instanceID: 0}
+- Class: 48
+  Script: {instanceID: 0}
+- Class: 54
+  Script: {instanceID: 0}
+- Class: 65
+  Script: {instanceID: 0}
+- Class: 83
+  Script: {instanceID: 0}
+- Class: 104
+  Script: {instanceID: 0}
+- Class: 108
+  Script: {instanceID: 0}
+- Class: 114
+  Script: {fileID: 11500000, guid: a09fbfe09bcf6794ca6e4c97020de25e, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 101cb834e1851dd44bff430f85134f8e, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 5bfe10b536b43ee418a213386ee8c02e, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 8b54f376fe2ec7f43a223ccbc01e2c37, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 2fa6e9fa7fd2042cb89e0191a95567f1, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 843516abb09bc481f850e812d20caa84, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 61d1bafbba8e1324197995a3258b8d09, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 5175d95c57bd1d5469e5212bdeccbe6a, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 3536af6dd6ad4ef45bcc0cb2f399b12c, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 50ed239e0a26e654b8541e2ce3a9c748, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: e731307fd79093441addf359c2a035d4, type: 3}
+- Class: 115
+  Script: {instanceID: 0}
+- Class: 135
+  Script: {instanceID: 0}
+- Class: 157
+  Script: {instanceID: 0}
+- Class: 198
+  Script: {instanceID: 0}
+- Class: 199
+  Script: {instanceID: 0}
+Assets:
+- Assets/Altspace/Export/HoloShot01.unity
+Dependencies: []

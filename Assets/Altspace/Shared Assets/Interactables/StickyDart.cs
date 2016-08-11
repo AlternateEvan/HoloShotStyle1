@@ -29,7 +29,7 @@ public class StickyDart : MonoBehaviour, IProjectile
 			velocities.Dequeue();
 		}
 
-		if(rigidbody.velocity.sqrMagnitude > Mathf.Epsilon)
+		if (rigidbody.velocity.sqrMagnitude > Mathf.Epsilon)
 			velocities.Enqueue(rigidbody.velocity);
 	}
 
@@ -72,11 +72,11 @@ public class StickyDart : MonoBehaviour, IProjectile
 
 			var dartTarget = contact.otherCollider.GetComponent<IDartTarget>();
 
-			if (layer == (int) Layer.Avatars)
+			if (layer == (int)Layer.Avatars)
 			{
 				transform.SetParent(contact.otherCollider.transform, false);
 			}
-			else if (layer == (int) Layer.Interactable || dartTarget != null)
+			else if (layer == (int)Layer.Interactable || dartTarget != null)
 			{
 				anchor = new GameObject();
 				anchor.name = "anchor";
@@ -88,7 +88,7 @@ public class StickyDart : MonoBehaviour, IProjectile
 			transform.forward = -contact.normal;
 			transform.position = contact.point;
 
-			var backoffPoint = contact.point + (-velocity.normalized*1f);
+			var backoffPoint = contact.point + (-velocity.normalized * 1f);
 
 			RaycastHit raycastHit;
 			var ray = new Ray(backoffPoint, velocity.normalized);
@@ -132,7 +132,7 @@ public class StickyDart : MonoBehaviour, IProjectile
 
 	}
 
-	public void Init(bool isMine)
+	public void Init(bool isMine, PlayerController owner)
 	{
 		if (!isMine)
 		{

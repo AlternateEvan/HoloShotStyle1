@@ -6,5 +6,5 @@ public interface IProjectile
 
 	void HandleRPC(string type);
 
-	void Init(bool isMine);
+	void Init(bool isMine, PlayerController owner);
 }

@@ -8,6 +8,8 @@ public class LaserBolt : MonoBehaviour, IProjectile
 	[SerializeField]
 	private float MaxReflectDistance = 10.0f;
 	[SerializeField]
+	private float MaxFirstShotDistance = 100.0f;
+	[SerializeField]
 	private float Speed = 30.0f;
 	private float reducedSpeed = 15.0f;
 	[SerializeField]
@@ -43,6 +45,10 @@ public class LaserBolt : MonoBehaviour, IProjectile
 
 	private bool isMine = false;
 
+	private bool firstReflect = true;
+
+	private PlayerController owner;
+
 	private MeshRenderer trailEffectMeshRenderer;
 
 	public event EventHandler<NetworkedProjectileRPCEventArgs> FireRPC;
@@ -59,16 +65,17 @@ public class LaserBolt : MonoBehaviour, IProjectile
 		}
 	}
 
-	public void Init(bool isMine)
+	public void Init(bool isMine, PlayerController owner)
 	{
 		this.isMine = isMine;
+		this.owner = owner;
 	}
 
 	void Awake()
 	{
 		boltTransform = GetComponentInChildren<Transform>();
 
-		reducedSpeed = Speed/2;
+		reducedSpeed = Speed / 2;
 	}
 
 	void Start()
@@ -77,18 +84,19 @@ public class LaserBolt : MonoBehaviour, IProjectile
 
 		raycastHitPoints.Enqueue(new RaycastHitPointData(transform.position, Vector3.zero));
 
+		firstReflect = true;
 		getReflectionPath(transform.position, transform.forward, ref raycastHitPoints, MaxReflections);
 
 		if (!isMine)
 		{
-			//This is a hack needed because remote laser bolts will initially spawn at 0,0,0 causing a
-			//glitch in the trail effect when it's moved to the correct initial position.
-			trailEffectMeshRenderer = GetComponentInChildren<MeshRenderer>();
-			trailEffectMeshRenderer.enabled = false;
-			StartCoroutine(enableTrailEffect());
+			var collider = GetComponentInChildren<SphereCollider>();
+			collider.enabled = false;
+
+			var rigidbody = GetComponent<Rigidbody>();
+			Destroy(rigidbody);
 		}
 
-#if !UNITY_ANDROID
+		//#if !UNITY_ANDROID
 		if (ReflectionParticlesPool == null)
 		{
 			ReflectionParticlesPool = new Dictionary<GameObject, List<ParticleSystem>>();
@@ -105,15 +113,9 @@ public class LaserBolt : MonoBehaviour, IProjectile
 				ReflectionParticlesPool[ReflectionParticles].Add(newParticle.GetComponent<ParticleSystem>());
 			}
 		}
-#endif
+		//#endif
 
 		playRandomClip(ShootSounds);
-	}
-
-	private IEnumerator enableTrailEffect()
-	{
-		yield return new WaitForSeconds(0.25f);
-		trailEffectMeshRenderer.enabled = true;
 	}
 
 	void FixedUpdate()
@@ -174,12 +176,7 @@ public class LaserBolt : MonoBehaviour, IProjectile
 	private void playRichochetSound()
 	{
 		playRandomClip(RichochetSounds);
-		var ev = FireRPC;
-		if (ev != null)
-		{
-			var args = new NetworkedProjectileRPCEventArgs("PlayRichochetSound");
-			ev(this, args);
-		}
+		emitRPC("PlayRichochetSound");
 	}
 
 	private IEnumerator Cleanup()
@@ -190,7 +187,7 @@ public class LaserBolt : MonoBehaviour, IProjectile
 
 	private void emitParticles(RaycastHitPointData data, bool sendRPC = true)
 	{
-#if !UNITY_ANDROID
+		//#if !UNITY_ANDROID
 		var particleSystem = ReflectionParticlesPool[ReflectionParticles][currentParticle];
 		particleSystem.transform.position = data.Position;
 		particleSystem.transform.LookAt(data.Position + data.Normal);
@@ -202,40 +199,41 @@ public class LaserBolt : MonoBehaviour, IProjectile
 
 		if (sendRPC)
 		{
-			var ev = FireRPC;
-			if (ev != null)
-			{
-				var args = new NetworkedProjectileRPCEventArgs("EmitParticles");
-				ev(this, args);
-			}
+			emitRPC("EmitParticles");
 		}
-#endif
+		//#endif
 	}
 
 	private void getReflectionPath(Vector3 origin, Vector3 direction, ref Queue<RaycastHitPointData> raycastHitPoints, int reflectionCount)
 	{
+		var dist = firstReflect ? MaxFirstShotDistance : MaxReflectDistance;
+		firstReflect = false;
+
 		if (reflectionCount > 0)
 		{
 			reflectionCount--;
 			RaycastHit raycastHit;
-			var ignoreLayer = ~(1 << (int) Layer.IgnoreRaycastLayer |
-			                    1 << (int) Layer.Interactable |
-								1 << (int) Layer.TriggerableSounds |
-								1 << (int) Layer.HolographicWindows |
-								1 << (int) Layer.Displays |
-								1 << (int) Layer.UILayer);
-			var gotHit = Physics.Raycast(origin, direction, out raycastHit, MaxReflectDistance, ignoreLayer);
+			var ignoreLayer = ~(1 << (int)Layer.IgnoreRaycastLayer |
+								1 << (int)Layer.Interactable |
+								1 << (int)Layer.TriggerableSounds |
+								1 << (int)Layer.HolographicWindows |
+								1 << (int)Layer.Displays |
+								1 << (int)Layer.UILayer);
+			var gotHit = Physics.Raycast(origin, direction, out raycastHit, dist, ignoreLayer);
 			if (gotHit)
 			{
 				raycastHitPoints.Enqueue(new RaycastHitPointData(raycastHit.point, raycastHit.normal));
 
 				var reflectionDir = Vector3.Reflect(direction, raycastHit.normal);
 
-				getReflectionPath(raycastHit.point, reflectionDir, ref raycastHitPoints, reflectionCount);
+				if (Vector3.Distance(origin, raycastHit.point) <= MaxReflectDistance)
+				{
+					getReflectionPath(raycastHit.point, reflectionDir, ref raycastHitPoints, reflectionCount);
+				}
 			}
 			else
 			{
-				raycastHitPoints.Enqueue(new RaycastHitPointData(origin + direction * MaxReflectDistance, direction));
+				raycastHitPoints.Enqueue(new RaycastHitPointData(origin + direction * dist, direction));
 			}
 		}
 	}
@@ -245,27 +243,32 @@ public class LaserBolt : MonoBehaviour, IProjectile
 		var reflection = -transform.forward;
 		var data = new RaycastHitPointData(transform.position, reflection);
 
-		if (other.gameObject.layer == (int) Layer.Interactable)
+		if (isMine)
 		{
-			Speed = reducedSpeed; //reduce speed of laser for dramatic effect
-			raycastHitPoints.Clear();
-			hasCurrentPath = false;
-			raycastHitPoints.Enqueue(data);
-			emitParticles(data);
-			playRichochetSound();
-
-			if (currentInteractableReflections < MaxReflections)
+			if (other.gameObject.layer == (int)Layer.Interactable)
 			{
-				currentInteractableReflections++;
-				reflection.x = reflection.x * UnityEngine.Random.Range(1 - InteractableReflectionDelta, 1 + InteractableReflectionDelta);
-				reflection.y = reflection.y * UnityEngine.Random.Range(1 - InteractableReflectionDelta, 1 + InteractableReflectionDelta);
-				getReflectionPath(transform.position, reflection, ref raycastHitPoints, 1);
+				Speed = reducedSpeed; //reduce speed of laser for dramatic effect
+				raycastHitPoints.Clear();
+				hasCurrentPath = false;
+				raycastHitPoints.Enqueue(data);
+				emitParticles(data);
+				playRichochetSound();
+
+				if (currentInteractableReflections < MaxReflections)
+				{
+					currentInteractableReflections++;
+					reflection.x = reflection.x *
+								   UnityEngine.Random.Range(1 - InteractableReflectionDelta, 1 + InteractableReflectionDelta);
+					reflection.y = reflection.y *
+								   UnityEngine.Random.Range(1 - InteractableReflectionDelta, 1 + InteractableReflectionDelta);
+					getReflectionPath(transform.position, reflection, ref raycastHitPoints, 1);
+				}
 			}
-		}
-		else if (other.gameObject.layer == (int)Layer.Avatars)
-		{
-			raycastHitPoints.Clear();
-			emitParticles(data);
+			else if (other.gameObject.layer == (int)Layer.Avatars)
+			{
+				raycastHitPoints.Clear();
+				emitParticles(data);
+			}
 		}
 	}
 
@@ -274,6 +277,16 @@ public class LaserBolt : MonoBehaviour, IProjectile
 		var selection = UnityEngine.Random.Range(0, clips.Length - 1);
 		AudioSource.PlayClipAtPoint(clips[selection], transform.position, 0.5f);
 		return selection;
+	}
+
+	private void emitRPC(string type)
+	{
+		var ev = FireRPC;
+		if (ev != null)
+		{
+			var args = new NetworkedProjectileRPCEventArgs(type);
+			ev(this, args);
+		}
 	}
 
 	public void HandleRPC(string type)

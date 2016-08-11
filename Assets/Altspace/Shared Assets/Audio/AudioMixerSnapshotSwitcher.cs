@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using UnityEngine.Audio;
 
 public class AudioMixerSnapshotSwitcher : MonoBehaviour 
@@ -9,7 +9,7 @@ public class AudioMixerSnapshotSwitcher : MonoBehaviour
 	public float TransitionTime = 0.5f;
 
 	private GameObject playerObject = null;
-	private string[] possiblePlayerControllerNames = { "First Person Controller", "FPSController",
+	private string[] possiblePlayerControllerNames = { "First Person Controller", "OVRPlayerController", "FPSController",
 		"FirstPersonController", "AltVRPlayerController" };
 
 	void OnTriggerEnter( Collider other ) 
